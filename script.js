@@ -1,10 +1,29 @@
 let TARGET_WIDTH = 1200;
 let TARGET_HEIGHT = 1600;
 
+// Sample image file lists
+const SAMPLE_IMAGES_1200 = [
+    'demo00.jpg',
+    'demo01.jpg',
+    'demo02.jpg',
+    'demo03.jpg',
+    'demo04.jpg',
+    'demo05.jpg',
+    'demo06.jpg',
+    'demo07.jpg',
+    'demo10.jpg',
+    'demo11.jpg'
+];
+
+const SAMPLE_IMAGES_2560 = [
+    // Add 2560x1440 sample files here when available
+];
+
 let uploadArea, fileInput, previewSection, loading;
 let originalPreview, resizedPreview, downloadBtn, resetBtn;
 let downloadFileNameInput, rotateLeftBtn, rotateRightBtn, rotationInfo;
 let sizeOptions, convertedImageTitle;
+let samples1200Container, samples2560Container;
 let resizedImageBlob = null;
 let originalFileName = '';
 let originalImage = null; // Original image object (for rotation)
@@ -27,8 +46,11 @@ document.addEventListener('DOMContentLoaded', () => {
     rotationInfo = document.getElementById('rotationInfo');
     sizeOptions = document.querySelectorAll('input[name="targetSize"]');
     convertedImageTitle = document.getElementById('convertedImageTitle');
-    const downloadSample1200 = document.getElementById('downloadSample1200');
-    const downloadSample2560 = document.getElementById('downloadSample2560');
+    samples1200Container = document.getElementById('samples1200');
+    samples2560Container = document.getElementById('samples2560');
+    
+    // Load sample images
+    loadSampleImages();
 
     if (!uploadArea || !fileInput || !previewSection || !loading) {
         console.error('Required DOM elements not found.');
@@ -152,18 +174,6 @@ function initEventListeners() {
         }
     });
 
-    // Sample download buttons
-    if (downloadSample1200) {
-        downloadSample1200.addEventListener('click', () => {
-            downloadSampleImage(1200, 1600);
-        });
-    }
-
-    if (downloadSample2560) {
-        downloadSample2560.addEventListener('click', () => {
-            downloadSampleImage(2560, 1440);
-        });
-    }
 }
 
 // File selection handler
@@ -396,50 +406,86 @@ function formatFileSize(bytes) {
     return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
 }
 
-// Download sample image from samples folder
-function downloadSampleImage(width, height) {
-    // Try common file extensions
-    const extensions = ['jpg', 'jpeg', 'png', 'webp'];
-    const folder = `samples/${width}x${height}/`;
+// Load and display sample images
+function loadSampleImages() {
+    // Load 1200x1600 samples
+    if (samples1200Container) {
+        loadSampleGroup(SAMPLE_IMAGES_1200, 'samples/1200x1600/', samples1200Container, 1200, 1600);
+    }
     
-    // Try to find sample file
-    let sampleUrl = null;
-    let sampleName = null;
-    
-    // Common filenames to try
-    const commonNames = ['sample', 'image', 'img', 'photo'];
-    
-    const tryDownload = (index = 0) => {
-        if (index >= commonNames.length * extensions.length) {
-            // If no file found, show message
-            alert(`Sample image not found. Please place a file named "sample.jpg" (or sample.png/webp) in the ${folder} folder.`);
-            return;
+    // Load 2560x1440 samples
+    if (samples2560Container) {
+        loadSampleGroup(SAMPLE_IMAGES_2560, 'samples/2560x1440/', samples2560Container, 2560, 1440);
+    }
+}
+
+// Load sample images for a specific group
+function loadSampleGroup(fileList, folder, container, width, height) {
+    if (!container || fileList.length === 0) {
+        if (container) {
+            container.innerHTML = '<p class="no-samples">No sample images available</p>';
         }
-        
-        const nameIndex = Math.floor(index / extensions.length);
-        const extIndex = index % extensions.length;
-        const filename = `${commonNames[nameIndex]}.${extensions[extIndex]}`;
-        const url = `${folder}${filename}`;
-        
-        // Try to load the image to check if it exists
-        const img = new Image();
-        img.onload = () => {
-            // File exists, download it
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `sample_${width}x${height}.${extensions[extIndex]}`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-        };
-        img.onerror = () => {
-            // Try next file
-            tryDownload(index + 1);
-        };
-        img.src = url;
-    };
+        return;
+    }
     
-    tryDownload();
+    container.innerHTML = '';
+    
+    fileList.forEach(filename => {
+        const imageUrl = `${folder}${filename}`;
+        const img = document.createElement('img');
+        img.src = imageUrl;
+        img.alt = filename;
+        img.className = 'sample-thumbnail';
+        img.loading = 'lazy';
+        
+        // Create container for each sample
+        const sampleItem = document.createElement('div');
+        sampleItem.className = 'sample-item';
+        
+        // Add image
+        sampleItem.appendChild(img);
+        
+        // Add filename label
+        const label = document.createElement('div');
+        label.className = 'sample-label';
+        label.textContent = filename;
+        sampleItem.appendChild(label);
+        
+        // Add download overlay
+        const overlay = document.createElement('div');
+        overlay.className = 'sample-overlay';
+        overlay.innerHTML = `
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="7 10 12 15 17 10"></polyline>
+                <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+            <span>Click to Download</span>
+        `;
+        sampleItem.appendChild(overlay);
+        
+        // Click to download
+        sampleItem.addEventListener('click', () => {
+            downloadSampleFile(imageUrl, filename);
+        });
+        
+        // Handle image load error
+        img.onerror = () => {
+            sampleItem.style.display = 'none';
+        };
+        
+        container.appendChild(sampleItem);
+    });
+}
+
+// Download sample file
+function downloadSampleFile(url, filename) {
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
 }
 
 
