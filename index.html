@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Baseline Resizer (1200x1600)</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🖼️ Image Baseline Resizer</h1>
+            <p class="subtitle">Convert WebP, JPEG, GIF, PNG images to 1200x1600 JPG</p>
+        </header>
+
+        <main>
+            <div class="upload-section">
+                <div class="upload-area" id="uploadArea">
+                    <svg class="upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="17 8 12 3 7 8"></polyline>
+                        <line x1="12" y1="3" x2="12" y2="15"></line>
+                    </svg>
+                    <p class="upload-text">Drag and drop or click to upload image</p>
+                    <p class="upload-hint">Supports WebP, JPEG, GIF, PNG files</p>
+                    <input type="file" id="fileInput" accept="image/webp,image/jpeg,image/jpg,image/gif,image/png" hidden>
+                </div>
+            </div>
+
+            <div class="preview-section" id="previewSection" style="display: none;">
+                <div class="image-info">
+                    <h2>Original Image Info</h2>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <span class="info-label">Filename:</span>
+                            <span class="info-value" id="originalFileName">-</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Size:</span>
+                            <span class="info-value" id="originalSize">-</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Resolution:</span>
+                            <span class="info-value" id="originalResolution">-</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Format:</span>
+                            <span class="info-value" id="originalFormat">-</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Status:</span>
+                            <span class="info-value" id="resizeStatus">-</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="preview-container">
+                    <div class="preview-box">
+                        <h3>Original Preview</h3>
+                        <img id="originalPreview" alt="Original image">
+                    </div>
+                    <div class="preview-box">
+                        <h3>Converted Image (1200x1600)</h3>
+                        <div class="rotation-controls">
+                            <button id="rotateLeftBtn" class="btn-rotate" title="Rotate 90° counterclockwise">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <polyline points="1 4 1 10 7 10"></polyline>
+                                    <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path>
+                                </svg>
+                            </button>
+                            <span class="rotation-info" id="rotationInfo">0°</span>
+                            <button id="rotateRightBtn" class="btn-rotate" title="Rotate 90° clockwise">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <polyline points="23 4 23 10 17 10"></polyline>
+                                    <path d="M20.49 15a9 9 0 1 1-2.13-9.36L23 10"></path>
+                                </svg>
+                            </button>
+                        </div>
+                        <img id="resizedPreview" alt="Resized image">
+                    </div>
+                </div>
+
+                <div class="filename-section">
+                    <label for="downloadFileName" class="filename-label">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                            <polyline points="14 2 14 8 20 8"></polyline>
+                            <line x1="16" y1="13" x2="8" y2="13"></line>
+                            <line x1="16" y1="17" x2="8" y2="17"></line>
+                            <polyline points="10 9 9 9 8 9"></polyline>
+                        </svg>
+                        Download Filename:
+                    </label>
+                    <input 
+                        type="text" 
+                        id="downloadFileName" 
+                        class="filename-input" 
+                        placeholder="Enter filename (without extension)"
+                    >
+                    <span class="filename-extension">.jpg</span>
+                </div>
+
+                <div class="action-buttons">
+                    <button id="downloadBtn" class="btn btn-primary">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="7 10 12 15 17 10"></polyline>
+                            <line x1="12" y1="15" x2="12" y2="3"></line>
+                        </svg>
+                        Download
+                    </button>
+                    <button id="resetBtn" class="btn btn-secondary">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <polyline points="1 4 1 10 7 10"></polyline>
+                            <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path>
+                        </svg>
+                        Reset
+                    </button>
+                </div>
+            </div>
+
+            <div class="loading" id="loading" style="display: none;">
+                <div class="spinner"></div>
+                <p>Processing image...</p>
+            </div>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
+
