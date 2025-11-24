@@ -1,9 +1,10 @@
-const TARGET_WIDTH = 1200;
-const TARGET_HEIGHT = 1600;
+let TARGET_WIDTH = 1200;
+let TARGET_HEIGHT = 1600;
 
 let uploadArea, fileInput, previewSection, loading;
 let originalPreview, resizedPreview, downloadBtn, resetBtn;
 let downloadFileNameInput, rotateLeftBtn, rotateRightBtn, rotationInfo;
+let sizeOptions, convertedImageTitle;
 let resizedImageBlob = null;
 let originalFileName = '';
 let originalImage = null; // Original image object (for rotation)
@@ -24,6 +25,8 @@ document.addEventListener('DOMContentLoaded', () => {
     rotateLeftBtn = document.getElementById('rotateLeftBtn');
     rotateRightBtn = document.getElementById('rotateRightBtn');
     rotationInfo = document.getElementById('rotationInfo');
+    sizeOptions = document.querySelectorAll('input[name="targetSize"]');
+    convertedImageTitle = document.getElementById('convertedImageTitle');
 
     if (!uploadArea || !fileInput || !previewSection || !loading) {
         console.error('Required DOM elements not found.');
@@ -83,6 +86,29 @@ function initEventListeners() {
             URL.revokeObjectURL(url);
         }
     });
+
+    // Size selection
+    if (sizeOptions && sizeOptions.length > 0) {
+        sizeOptions.forEach(option => {
+            option.addEventListener('change', (e) => {
+                if (e.target.checked) {
+                    const [width, height] = e.target.value.split('x').map(Number);
+                    TARGET_WIDTH = width;
+                    TARGET_HEIGHT = height;
+                    
+                    // Update title
+                    if (convertedImageTitle) {
+                        convertedImageTitle.textContent = `Converted Image (${TARGET_WIDTH}x${TARGET_HEIGHT})`;
+                    }
+                    
+                    // Reprocess image if already loaded
+                    if (originalImage) {
+                        processImage(originalImage, originalFile, currentRotation);
+                    }
+                }
+            });
+        });
+    }
 
     // Rotation buttons
     if (rotateLeftBtn) {
@@ -322,6 +348,11 @@ function processImage(img, originalFile, rotation = 0) {
                 console.log('Resized image loaded');
                 loading.style.display = 'none';
                 previewSection.style.display = 'block';
+                
+                // Update title
+                if (convertedImageTitle) {
+                    convertedImageTitle.textContent = `Converted Image (${TARGET_WIDTH}x${TARGET_HEIGHT})`;
+                }
                 
                 // Set default filename
                 const nameWithoutExt = originalFileName.replace(/\.[^/.]+$/, '');

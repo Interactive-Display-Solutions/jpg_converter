@@ -28,6 +28,20 @@
             </div>
 
             <div class="preview-section" id="previewSection" style="display: none;">
+                <div class="size-selection">
+                    <h2>Target Size</h2>
+                    <div class="size-options">
+                        <label class="size-option">
+                            <input type="radio" name="targetSize" value="1200x1600" checked>
+                            <span class="size-label">1200 x 1600</span>
+                        </label>
+                        <label class="size-option">
+                            <input type="radio" name="targetSize" value="2560x1440">
+                            <span class="size-label">2560 x 1440</span>
+                        </label>
+                    </div>
+                </div>
+
                 <div class="image-info">
                     <h2>Original Image Info</h2>
                     <div class="info-grid">
@@ -60,7 +74,7 @@
                         <img id="originalPreview" alt="Original image">
                     </div>
                     <div class="preview-box">
-                        <h3>Converted Image (1200x1600)</h3>
+                        <h3 id="convertedImageTitle">Converted Image (1200x1600)</h3>
                         <div class="rotation-controls">
                             <button id="rotateLeftBtn" class="btn-rotate" title="Rotate 90° counterclockwise">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
