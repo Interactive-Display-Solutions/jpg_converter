@@ -191,25 +191,27 @@ function rotateImage(angle) {
     processImage(originalImage, originalFile, currentRotation);
 }
 
-// Image processing
+    // Image processing
 function processImage(img, originalFile, rotation = 0) {
     console.log('Image processing started, rotation:', rotation);
     loading.style.display = 'block';
     previewSection.style.display = 'none';
 
-    // Calculate actual image size based on rotation angle
-    let displayWidth = img.width;
-    let displayHeight = img.height;
+    // Always use original image dimensions (don't swap for rotation)
+    const originalWidth = img.width;
+    const originalHeight = img.height;
+    
+    // For display purposes, calculate rotated dimensions
+    let displayWidth = originalWidth;
+    let displayHeight = originalHeight;
     
     if (rotation === 90 || rotation === 270) {
-        // Swap width/height when rotated 90° or 270°
-        displayWidth = img.height;
-        displayHeight = img.width;
+        // Swap width/height when rotated 90° or 270° (for display calculation only)
+        displayWidth = originalHeight;
+        displayHeight = originalWidth;
     }
 
     // Display original image info (before rotation)
-    const originalWidth = img.width;
-    const originalHeight = img.height;
     const originalSize = originalFile ? formatFileSize(originalFile.size) : '-';
     const isTargetSize = displayWidth === TARGET_WIDTH && displayHeight === TARGET_HEIGHT;
 
@@ -269,19 +271,21 @@ function processImage(img, originalFile, rotation = 0) {
         ctx.save();
         ctx.translate(TARGET_WIDTH / 2, TARGET_HEIGHT / 2);
         
-        // Apply rotation
+        // Apply rotation first
         if (rotation !== 0) {
             ctx.rotate((rotation * Math.PI) / 180);
         }
 
-        // Resize while maintaining aspect ratio
+        // Calculate scale to fit within 1200x1600 while maintaining aspect ratio
+        // Use original dimensions for scaling (not rotated dimensions)
         const scale = Math.min(
-            TARGET_WIDTH / displayWidth,
-            TARGET_HEIGHT / displayHeight
+            TARGET_WIDTH / originalWidth,
+            TARGET_HEIGHT / originalHeight
         );
 
-        const scaledWidth = displayWidth * scale;
-        const scaledHeight = displayHeight * scale;
+        // Use original dimensions for drawing (maintain original aspect ratio)
+        const scaledWidth = originalWidth * scale;
+        const scaledHeight = originalHeight * scale;
 
         // Center alignment (centered after rotation)
         const x = -scaledWidth / 2;
@@ -289,12 +293,13 @@ function processImage(img, originalFile, rotation = 0) {
 
         console.log('Resizing info:', {
             rotation,
+            originalSize: `${originalWidth}x${originalHeight}`,
             scale,
-            scaledWidth,
-            scaledHeight,
+            scaledSize: `${scaledWidth}x${scaledHeight}`,
             position: { x, y }
         });
 
+        // Draw image with original dimensions (no stretching)
         ctx.drawImage(img, x, y, scaledWidth, scaledHeight);
         ctx.restore();
 

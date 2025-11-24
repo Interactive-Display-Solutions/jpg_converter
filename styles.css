@@ -160,20 +160,31 @@ main {
     border-radius: 12px;
     padding: 20px;
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-height: 80vh;
+    overflow-y: auto;
 }
 
 .preview-box h3 {
     font-size: 1.1rem;
     margin-bottom: 15px;
     color: #667eea;
+    flex-shrink: 0;
 }
 
 .preview-box img {
-    max-width: 100%;
+    width: auto;
     height: auto;
+    max-width: 100%;
+    max-height: none;
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     border: 2px solid #e0e0e0;
+    object-fit: contain;
+    display: block;
+    margin: 0 auto;
 }
 
 .rotation-controls {
