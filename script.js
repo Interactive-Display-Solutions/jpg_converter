@@ -27,6 +27,8 @@ document.addEventListener('DOMContentLoaded', () => {
     rotationInfo = document.getElementById('rotationInfo');
     sizeOptions = document.querySelectorAll('input[name="targetSize"]');
     convertedImageTitle = document.getElementById('convertedImageTitle');
+    const downloadSample1200 = document.getElementById('downloadSample1200');
+    const downloadSample2560 = document.getElementById('downloadSample2560');
 
     if (!uploadArea || !fileInput || !previewSection || !loading) {
         console.error('Required DOM elements not found.');
@@ -149,6 +151,19 @@ function initEventListeners() {
             rotationInfo.textContent = '0°';
         }
     });
+
+    // Sample download buttons
+    if (downloadSample1200) {
+        downloadSample1200.addEventListener('click', () => {
+            downloadSampleImage(1200, 1600);
+        });
+    }
+
+    if (downloadSample2560) {
+        downloadSample2560.addEventListener('click', () => {
+            downloadSampleImage(2560, 1440);
+        });
+    }
 }
 
 // File selection handler
@@ -379,6 +394,52 @@ function formatFileSize(bytes) {
     const sizes = ['Bytes', 'KB', 'MB', 'GB'];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
     return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
+}
+
+// Download sample image from samples folder
+function downloadSampleImage(width, height) {
+    // Try common file extensions
+    const extensions = ['jpg', 'jpeg', 'png', 'webp'];
+    const folder = `samples/${width}x${height}/`;
+    
+    // Try to find sample file
+    let sampleUrl = null;
+    let sampleName = null;
+    
+    // Common filenames to try
+    const commonNames = ['sample', 'image', 'img', 'photo'];
+    
+    const tryDownload = (index = 0) => {
+        if (index >= commonNames.length * extensions.length) {
+            // If no file found, show message
+            alert(`Sample image not found. Please place a file named "sample.jpg" (or sample.png/webp) in the ${folder} folder.`);
+            return;
+        }
+        
+        const nameIndex = Math.floor(index / extensions.length);
+        const extIndex = index % extensions.length;
+        const filename = `${commonNames[nameIndex]}.${extensions[extIndex]}`;
+        const url = `${folder}${filename}`;
+        
+        // Try to load the image to check if it exists
+        const img = new Image();
+        img.onload = () => {
+            // File exists, download it
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `sample_${width}x${height}.${extensions[extIndex]}`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        };
+        img.onerror = () => {
+            // Try next file
+            tryDownload(index + 1);
+        };
+        img.src = url;
+    };
+    
+    tryDownload();
 }
 
 
