@@ -16,7 +16,12 @@ const SAMPLE_IMAGES_1200 = [
 ];
 
 const SAMPLE_IMAGES_2560 = [
-    // Add 2560x1440 sample files here when available
+    'demo_2560_01.jpg',
+    'demo_2560_02.jpg',
+    'demo_2560_03.jpg',
+    'demo_2560_04.jpg',
+    'demo_2560_05.jpg',
+    'demo_2560_06.jpg'
 ];
 
 let uploadArea, fileInput, previewSection, loading;
