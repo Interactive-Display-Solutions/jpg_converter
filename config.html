@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Slide Show Config Generator - Spectra6</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📋 Slide Show Config Generator</h1>
+            <p class="subtitle">Generate config.txt for Spectra6 slide show</p>
+        </header>
+
+        <main>
+            <div class="config-section">
+                <div class="config-upload-area" id="configUploadArea">
+                    <svg class="upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="17 8 12 3 7 8"></polyline>
+                        <line x1="12" y1="3" x2="12" y2="15"></line>
+                    </svg>
+                    <p class="upload-text">Select multiple JPG images for slide show</p>
+                    <p class="upload-hint">Hold Ctrl/Cmd to select multiple files</p>
+                    <input type="file" id="configFileInput" accept="image/jpeg,image/jpg" multiple hidden>
+                </div>
+
+                <div class="config-list" id="configList" style="display: none;">
+                    <h3>Image List</h3>
+                    <div class="config-items" id="configItems"></div>
+                    <div class="config-actions">
+                        <button id="generateConfigBtn" class="btn btn-primary">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                <polyline points="14 2 14 8 20 8"></polyline>
+                                <line x1="16" y1="13" x2="8" y2="13"></line>
+                                <line x1="16" y1="17" x2="8" y2="17"></line>
+                            </svg>
+                            Generate config.txt
+                        </button>
+                        <button id="clearConfigBtn" class="btn btn-secondary">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <polyline points="1 4 1 10 7 10"></polyline>
+                                <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path>
+                            </svg>
+                            Clear
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="config-info">
+                <h3>How to Use</h3>
+                <ol>
+                    <li>Select multiple JPG image files</li>
+                    <li>Set display duration (in seconds) for each image</li>
+                    <li>Click "Generate config.txt" to download</li>
+                    <li>Place config.txt and images in <code>/slide_show/</code> folder on SD card</li>
+                </ol>
+                <p class="info-note">💡 The config.txt file will be generated in the format:<br>
+                <code>/slide_show/filename.jpg duration</code></p>
+            </div>
+        </main>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 IDS (Interactive Display Solutions). All rights reserved.</p>
+        <p><a href="index.html" style="color: white; text-decoration: underline;">← Back to Image Resizer</a></p>
+    </footer>
+
+    <script src="config.js"></script>
+</body>
+</html>
+
